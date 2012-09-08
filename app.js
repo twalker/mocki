@@ -29,12 +29,13 @@ app.configure('development', function(){
 	app.use(express.errorHandler());
 });
 
-app.get('*', routes.list);
-app.post('*', routes.create);
-//app.get('/:id', routes.show);
-app.put('*', routes.update);
-app.del('*', routes.del);
+app.get('/:collection', routes.list);
+app.get('/:collection/:id', routes.show);
+app.post('/:collection', routes.create);
+
+app.put('/:collection/:id', routes.update);
+app.del('/:collection/:id', routes.del);
 
 http.createServer(app).listen(app.get('port'), function(){
-	console.log("Express server listening at: http://" + app.get('host') + ":" + app.get('port'));
+	console.log("mocki listening at: http://" + app.get('host') + ":" + app.get('port'));
 });

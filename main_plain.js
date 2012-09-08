@@ -41,7 +41,6 @@ http.createServer(function (request, response) {
 			return;
 		}
 
-
 		
 
 		fs.readFile(filename, "binary", function (err, file) {
