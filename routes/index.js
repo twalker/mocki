@@ -4,34 +4,57 @@ var path = require('path'),
 
 var mockspath = path.join(__dirname, '..', 'mocks');
 
-var resolveToJson = function(url){
-	return "to do: add .json to url";
-};
-var mkdir = function(path, root) {
-
-	var dirs = path.split('/'), dir = dirs.shift(), root = (root||'')+dir+'/';
-
-	try { fs.mkdirSync(root); }
-	catch (e) {
-		//dir wasn't made, something went wrong
-		if(!fs.statSync(root).isDirectory()) throw new Error(e);
-	}
-
-	return !dirs.length||mkdir(dirs.join('/'), root);
-}
-//mkdir('parent/child/grandchild');
-
 exports.list = function(req, res){
-	res.send('list');
+	// todo: server list.json if it exists, otherwise create json from files.
+	var collection = req.param('collection');
+	var dirPath = path.join(mockspath, collection);
+	var models = [];
+	// TOREVISIT: doing Sync file io, shame on me. need to figure out how async approach.
+	var files = fs.readdirSync(dirPath);
+	files.forEach(function(filename){
+		var data = fs.readFileSync(path.join(dirPath, filename));
+		models.push(JSON.parse(data));
+	});
+
+	res.send(models);
+
+	/*
+	fs.readdir(dirPath, function(err, files){
+		console.log('files', files);
+		var models = [];
+		files.forEach(function(filename){
+			fs.readFile(path.join(dirPath, filename), function(err, data){
+				console.log('found', data);
+				models.push(JSON.parse(data));
+			});
+		});
+		
+		console.log('models', models);
+	});
+	*/
+	console.log('listing', models);
+};
+
+exports.show = function(req, res){
+	var filePath = path.join(mockspath, req.param('collection'), req.param('id') + '.json');
+	fs.exists(filePath, function (exists) {
+		if(exists){
+			fs.readFile(filePath, function(err, data){
+				if(err) throw err;
+				res.send(JSON.parse(data));
+				console.log('file shown: ', filePath);
+			});
+		} else {
+			res.send(404, filePath + " not found.");
+		}
+	});
 };
 
 exports.create = function(req, res){
-	console.log('params', req.params);
-	console.log('collection', req.param('collection'));
-
 	var json = req.body;
 	var id = json.id = json.id || uuid.v1();
-	var filePath = path.join(mockspath, req.url, id + '.json');
+	var collection = req.param('collection');
+	var filePath = path.join(mockspath, collection, id + '.json');
 	
 	fs.writeFile(filePath, JSON.stringify(json), function (err) {
 		if(err) throw err;
@@ -41,11 +64,7 @@ exports.create = function(req, res){
 	res.send(json);
 };
 
-exports.show = function(req, res){
-	var filePath = path.join(mockspath, req.url + '.json');
-	//fileServer.serveFile('/error.html', 500, {}, request, response);
-	res.send('show');
-};
+
 
 exports.update = function(req, res){
 	// repetetive of create method
@@ -63,7 +82,8 @@ exports.update = function(req, res){
 
 
 exports.del = function(req, res){
-	var filePath = path.join(mockspath, req.url + '.json');
+	//var filePath = path.join(mockspath, req.url + '.json');
+	var filePath = path.join(mockspath, req.param('collection'), req.param('id') + '.json');
 	fs.readFile(filePath, function(err, data){
 		if(err) throw err;
 		res.send(JSON.parse(data));

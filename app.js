@@ -1,11 +1,5 @@
-
-/**
- * Module dependencies.
- */
-
 var express = require('express')
 	, routes = require('./routes')
-	, user = require('./routes/user')
 	, http = require('http')
 	, path = require('path')
 	, url = require('url');
@@ -22,17 +16,17 @@ app.configure(function(){
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(app.router);
-	app.use(express.static(path.join(__dirname, 'mocks')));
+	//app.use(express.static(path.join(__dirname, 'mocks')));
 });
 
 app.configure('development', function(){
 	app.use(express.errorHandler());
 });
 
-app.get('/:collection', routes.list);
-app.get('/:collection/:id', routes.show);
-app.post('/:collection', routes.create);
 
+app.get('/:collection/:id', routes.show);
+app.get('/:collection', routes.list);
+app.post('/:collection', routes.create);
 app.put('/:collection/:id', routes.update);
 app.del('/:collection/:id', routes.del);
 
