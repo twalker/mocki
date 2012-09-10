@@ -1,4 +1,4 @@
-##mocki
+##mocki 😌
 simple server to route requests to mock json files.  
 saves files in `mocks/` + collectionname
 
@@ -9,9 +9,9 @@ should be middleware so I can use it per collection.
 something like [nock](https://github.com/flatiron/nock), only 1/1000th the coolness.
 need to figure out how exactly I want to use it in app (middleware, proxy server, etc.) before I get too far.
 
-currently 
-
 ---------------
+
+routes
 
 GET collection/:id?
 	- list: default to list.json or dynamically return a index.json with dir list

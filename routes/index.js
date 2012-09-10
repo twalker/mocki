@@ -8,31 +8,44 @@ exports.list = function(req, res){
 	// todo: server list.json if it exists, otherwise create json from files.
 	var collection = req.param('collection');
 	var dirPath = path.join(mockspath, collection);
-	var models = [];
-	// TOREVISIT: doing Sync file io, shame on me. need to figure out how async approach.
+	
+	// TOREVISIT: Need to figure out proper recursion in the async approach.
+	/*
+	// sync style:
 	var files = fs.readdirSync(dirPath);
 	files.forEach(function(filename){
 		var data = fs.readFileSync(path.join(dirPath, filename));
 		models.push(JSON.parse(data));
 	});
-
 	res.send(models);
-
-	/*
-	fs.readdir(dirPath, function(err, files){
-		console.log('files', files);
-		var models = [];
-		files.forEach(function(filename){
-			fs.readFile(path.join(dirPath, filename), function(err, data){
-				console.log('found', data);
-				models.push(JSON.parse(data));
-			});
-		});
-		
-		console.log('models', models);
-	});
+	console.log('listing');
 	*/
-	console.log('listing', models);
+
+	fs.readdir(dirPath, function(err, files){
+		var models = [],
+			len = files.length,
+			i = 0;
+
+		var addToList = function addToList(err, data){
+			if(err) throw err;
+
+			models.push(JSON.parse(data));
+			if(i === len -1){
+				res.send(models);
+				console.log('listing', models);
+			} else {
+				i++;
+			}
+		};
+
+		if(len === 0) {
+			res.send(models);
+		} else {
+			files.forEach(function(filename){
+				fs.readFile(path.join(dirPath, filename), addToList);
+			});
+		}
+	});
 };
 
 exports.show = function(req, res){
@@ -56,6 +69,7 @@ exports.create = function(req, res){
 	var collection = req.param('collection');
 	var filePath = path.join(mockspath, collection, id + '.json');
 	
+	// TODO: make collection dir if it doesn't exist
 	fs.writeFile(filePath, JSON.stringify(json), function (err) {
 		if(err) throw err;
 		console.log('file saved: ', filePath);
