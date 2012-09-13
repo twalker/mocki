@@ -107,3 +107,18 @@ exports.del = function(req, res){
 	});
 	
 };
+
+exports.bootstrap = function(req, res){
+	var filePath = path.join(mockspath, 'bootstrap.json');
+	fs.exists(filePath, function (exists) {
+		if(exists){
+			fs.readFile(filePath, function(err, data){
+				if(err) throw err;
+				res.send(JSON.parse(data));
+				console.log('file shown: ', filePath);
+			});
+		} else {
+			res.send(404, filePath + " not found.");
+		}
+	});
+};

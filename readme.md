@@ -9,6 +9,10 @@ should be middleware so I can use it per collection.
 something like [nock](https://github.com/flatiron/nock), only 1/1000th the coolness.
 need to figure out how exactly I want to use it in app (middleware, proxy server, etc.) before I get too far.
 
+todo: 
+
+- figure out how better way to deal with namespacing for 'api', should be an option.
+
 ---------------
 
 routes
