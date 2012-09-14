@@ -108,7 +108,7 @@ exports.destroy = function(req, res){
 	});
 	
 };
-
+// TOREVISIT: is there away around the special route?
 exports.bootstrap = function(req, res){
 	var filePath = path.join(mockspath, 'bootstrap.json');
 	fs.exists(filePath, function (exists) {

@@ -2,9 +2,7 @@ var express = require('express')
 	, routes = require('./routes')
 	, http = require('http')
 	, path = require('path')
-	, url = require('url')
-	, ns = require('express-namespace');
-
+	, url = require('url');
 
 var app = express();
 
@@ -20,14 +18,13 @@ app.configure(function(){
 	app.use(express.errorHandler({showStack: true, dumpExceptions: true}));
 });
 
-app.namespace('/api', function(){
-	app.get('/bootstrap', routes.bootstrap);
-	app.get('/:collection/:id', routes.show);
-	app.get('/:collection', routes.list);
-	app.post('/:collection', routes.create);
-	app.put('/:collection/:id', routes.update);
-	app.del('/:collection/:id', routes.destroy);
-});
+app.get('/bootstrap', routes.bootstrap);
+app.get('/:collection/:id', routes.show);
+app.get('/:collection', routes.list);
+app.post('/:collection', routes.create);
+app.put('/:collection/:id', routes.update);
+app.del('/:collection/:id', routes.destroy);
+
 
 http.createServer(app).listen(app.get('port'), function(){
 	console.log("mocki listening at: http://" + app.get('host') + ":" + app.get('port'));
