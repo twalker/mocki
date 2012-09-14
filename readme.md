@@ -32,3 +32,17 @@ PUT collection/id
 DELETE collection/id
 	- delete: delete file
 
+-------------
+
+base boostrap
+
+		{
+			"user": {
+				"name":"tester",
+				"roles":["campaigns", "library", "reporting","account"]
+			},
+			"organization": {
+				"name":"test org"
+			},
+			"onlineUsers": []
+		}

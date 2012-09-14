@@ -22,6 +22,7 @@ exports.list = function(req, res){
 	*/
 
 	fs.readdir(dirPath, function(err, files){
+		if(err) throw err;
 		var models = [],
 			len = files.length,
 			i = 0;
@@ -95,7 +96,7 @@ exports.update = function(req, res){
 };
 
 
-exports.del = function(req, res){
+exports.destroy = function(req, res){
 	//var filePath = path.join(mockspath, req.url + '.json');
 	var filePath = path.join(mockspath, req.param('collection'), req.param('id') + '.json');
 	fs.readFile(filePath, function(err, data){
