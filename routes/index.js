@@ -79,8 +79,6 @@ exports.create = function(req, res){
 	res.send(json);
 };
 
-
-
 exports.update = function(req, res){
 	// repetetive of create method
 	var json = req.body;
@@ -95,7 +93,6 @@ exports.update = function(req, res){
 	res.send(json);
 };
 
-
 exports.destroy = function(req, res){
 	//var filePath = path.join(mockspath, req.url + '.json');
 	var filePath = path.join(mockspath, req.param('collection'), req.param('id') + '.json');
@@ -108,6 +105,7 @@ exports.destroy = function(req, res){
 	});
 	
 };
+
 // TOREVISIT: is there away around the special route?
 exports.bootstrap = function(req, res){
 	var filePath = path.join(mockspath, 'bootstrap.json');

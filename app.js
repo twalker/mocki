@@ -17,10 +17,12 @@ app.configure(function(){
 	app.use(app.router);
 	app.use(express.errorHandler({showStack: true, dumpExceptions: true}));
 });
+
 app.all('*', function(req, res, next){
 	console.log('mocki received request for: %s', req.url);
 	next();
 });
+
 app.get('/bootstrap', routes.bootstrap);
 app.get('/:collection/:id', routes.show);
 app.get('/:collection', routes.list);
@@ -30,5 +32,5 @@ app.del('/:collection/:id', routes.destroy);
 
 
 http.createServer(app).listen(app.get('port'), function(){
-	console.log("mocki listening at: http://" + app.get('host') + ":" + app.get('port'));
+	console.log("😌  mocki listening at: http://" + app.get('host') + ":" + app.get('port'));
 });

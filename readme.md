@@ -1,48 +1,66 @@
-##mocki 😌
-simple server to route requests to mock json files.  
-saves files in `mocks/` + collectionname
+##😌  mocki
+a little server of mock json files for backbone models/collections.  
+mocki saves files in `mocks/` + collectionname.  
 
-it should be used as middleware that can be swapped out for the real restful resource api based on NODE_ENV
-
-should be middleware so I can use it per collection. 
-
-something like [nock](https://github.com/flatiron/nock), only 1/1000th the coolness.
-need to figure out how exactly I want to use it in app (middleware, proxy server, etc.) before I get too far.
-
-todo: 
-
-- figure out how better way to deal with namespacing for 'api', should be an option.
+mocki has less that 1/1000th the coolness of [nock](https://github.com/flatiron/nock), but I wanted persistence.
 
 ---------------
 
-routes
+###routes
 
 GET collection/:id?
-	- list: default to list.json or dynamically return a index.json with dir list
-	- show: if id
+	- list: dynamically return an json array of each file in dir.
+	- show if id provided
 		if file, return the file
-		if directory, return a list.json
 
 POST collection/
-	- create: save json to a file
+	- create: save an `id.json` file
 
 PUT collection/id
-	- update: reflect back json sent
+	- update: save an `id.json` file and reflect the json sent
 	
 DELETE collection/id
-	- delete: delete file
+	- destroy: delete `id.json` file
 
--------------
 
-base boostrap
+---------------
+###example usage
+run the mocki server:  `node app`
 
-		{
-			"user": {
-				"name":"tester",
-				"roles":["campaigns", "library", "reporting","account"]
-			},
-			"organization": {
-				"name":"test org"
-			},
-			"onlineUsers": []
-		}
+in the client express app, forward proxy the desired requests, e.g. /api/*
+		
+		// proxy api requests to mocki when in "test" mode
+		app.configure('test', function () {	
+			var proxy = new httpProxy.RoutingProxy();
+			app.set('trust proxy', true);
+			app.all("/api/*", function(req, res){
+				// trim urls for mocki, url should start with collection name
+				req.url = req.url.replace(/^.+api\//, '/');
+				proxy.proxyRequest(req, res, {
+					host: 'localhost',
+					port: 8000
+				});
+			});
+		});
+
+
+---------------
+
+###big todo:
+
+need to figure out how exactly I want to use it in app before I get too far. 
+ I want to use it to swap out for the real restful resource api based on NODE_ENV.  
+ Stand alone server or middleware?  
+ If middleware, mocki I can use it per collection and let the routing be handled by the consuming app. mocki just responds, let the client determine which requests to forward.
+
+####problems:
+
+- same origin policy restricts to the same port that the client's using. should look into cors.
+- when using a proxy in the client, express.bodyParser() changes the request to where http-proxy doesn't forward POST, DELETE, UPDATE requests properly [more info](https://github.com/nodejitsu/node-http-proxy/issues/180). The fix is to register the middleware before the bodyParser.
+
+###smaller todo: 
+
+- handle case of serving list.json.
+- figure out how better way to deal with namespacing for 'api', should be an option.
+- figure out how to deal with options (mock dir, base api path)
+- better deal with throwing errors--need to understand best practice.
