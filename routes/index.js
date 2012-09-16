@@ -33,7 +33,7 @@ exports.list = function(req, res){
 			models.push(JSON.parse(data));
 			if(i === len -1){
 				res.send(models);
-				console.log('listing', models);
+				console.log('😌  listing', models);
 			} else {
 				i++;
 			}
@@ -56,7 +56,7 @@ exports.show = function(req, res){
 			fs.readFile(filePath, function(err, data){
 				if(err) throw err;
 				res.send(JSON.parse(data));
-				console.log('file shown: ', filePath);
+				console.log('😌  showed: ', filePath);
 			});
 		} else {
 			res.send(404, filePath + " not found.");
@@ -73,7 +73,7 @@ exports.create = function(req, res){
 	// TODO: make collection dir if it doesn't exist
 	fs.writeFile(filePath, JSON.stringify(json), function (err) {
 		if(err) throw err;
-		console.log('file saved: ', filePath);
+		console.log('😌  saved: ', filePath);
 	});
 	
 	res.send(json);
@@ -87,7 +87,7 @@ exports.update = function(req, res){
 
 	fs.writeFile(filePath, JSON.stringify(json), function (err) {
 		if(err) throw err;
-		console.log('file updated: ', filePath);
+		console.log('😌  updated: ', filePath);
 	});
 	
 	res.send(json);
@@ -100,7 +100,7 @@ exports.destroy = function(req, res){
 		if(err) throw err;
 		res.send(JSON.parse(data));
 		fs.unlink(filePath, function(e){
-			console.log('file deleted: ' + filePath);
+			console.log('😌  deleted: ' + filePath);
 		});
 	});
 	
@@ -114,7 +114,7 @@ exports.bootstrap = function(req, res){
 			fs.readFile(filePath, function(err, data){
 				if(err) throw err;
 				res.send(JSON.parse(data));
-				console.log('file shown: ', filePath);
+				console.log('😌  showed: ', filePath);
 			});
 		} else {
 			res.send(404, filePath + " not found.");

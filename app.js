@@ -18,11 +18,6 @@ app.configure(function(){
 	app.use(express.errorHandler({showStack: true, dumpExceptions: true}));
 });
 
-app.all('*', function(req, res, next){
-	console.log('mocki received request for: %s', req.url);
-	next();
-});
-
 app.get('/bootstrap', routes.bootstrap);
 app.get('/:collection/:id', routes.show);
 app.get('/:collection', routes.list);
