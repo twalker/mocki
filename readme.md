@@ -2,25 +2,25 @@
 a little server of mock json files for backbone models/collections.  
 mocki saves files in `mocks/` + collectionname.  
 
-mocki has less that 1/1000th the coolness of [nock](https://github.com/flatiron/nock), but I wanted persistence.
+mocki has less that 1/1000th the coolness of [nock](https://github.com/flatiron/nock), but I wanted persistence and to learn stuff.
 
 ---------------
 
 ###routes
 
-GET collection/:id?
-	- list: dynamically return an json array of each file in dir.
-	- show if id provided
-		if file, return the file
+GET collection/:id?  
 
-POST collection/
-	- create: save an `id.json` file
+list: dynamically return an json array of each `*.json` file in dir.  
+show: `id.json` file
 
-PUT collection/id
-	- update: save an `id.json` file and reflect the json sent
+POST collection/  
+create/save an `id.json` file
+
+PUT collection/id  
+update/save an `id.json` file and reflect back the json sent
 	
-DELETE collection/id
-	- destroy: delete `id.json` file
+DELETE collection/id  
+delete `id.json` file
 
 
 ---------------
