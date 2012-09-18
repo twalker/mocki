@@ -32,7 +32,7 @@ exports.list = function(req, res){
 
 			models.push(JSON.parse(data));
 			if(i === len -1){
-				res.send(models);
+				res.json(models);
 				console.log('😌  listing', models);
 			} else {
 				i++;
@@ -40,7 +40,7 @@ exports.list = function(req, res){
 		};
 
 		if(len === 0) {
-			res.send(models);
+			res.json(models);
 		} else {
 			files.forEach(function(filename){
 				fs.readFile(path.join(dirPath, filename), addToList);
@@ -55,11 +55,11 @@ exports.show = function(req, res){
 		if(exists){
 			fs.readFile(filePath, function(err, data){
 				if(err) throw err;
-				res.send(JSON.parse(data));
+				res.json(JSON.parse(data));
 				console.log('😌  showed: ', filePath);
 			});
 		} else {
-			res.send(404, filePath + " not found.");
+			res.json(404, {error: filePath + " not found."});
 		}
 	});
 };
@@ -76,7 +76,7 @@ exports.create = function(req, res){
 		console.log('😌  saved: ', filePath);
 	});
 	
-	res.send(json);
+	res.json(json);
 };
 
 exports.update = function(req, res){
@@ -90,7 +90,7 @@ exports.update = function(req, res){
 		console.log('😌  updated: ', filePath);
 	});
 	
-	res.send(json);
+	res.json(json);
 };
 
 exports.destroy = function(req, res){
@@ -98,7 +98,7 @@ exports.destroy = function(req, res){
 	var filePath = path.join(mockspath, req.param('collection'), req.param('id') + '.json');
 	fs.readFile(filePath, function(err, data){
 		if(err) throw err;
-		res.send(JSON.parse(data));
+		res.json(JSON.parse(data));
 		fs.unlink(filePath, function(e){
 			console.log('😌  deleted: ' + filePath);
 		});
@@ -108,16 +108,17 @@ exports.destroy = function(req, res){
 
 // TOREVISIT: is there away around the special route?
 exports.bootstrap = function(req, res){
+	console.log('boostrap called');
 	var filePath = path.join(mockspath, 'bootstrap.json');
 	fs.exists(filePath, function (exists) {
 		if(exists){
 			fs.readFile(filePath, function(err, data){
 				if(err) throw err;
-				res.send(JSON.parse(data));
+				res.json(JSON.parse(data));
 				console.log('😌  showed: ', filePath);
 			});
 		} else {
-			res.send(404, filePath + " not found.");
+			res.json(404, filePath + " not found.");
 		}
 	});
 };
