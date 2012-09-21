@@ -63,4 +63,4 @@ need to figure out how exactly I want to use it in app before I get too far.
 - handle case of serving list.json.
 - figure out how better way to deal with namespacing for 'api', should be an option.
 - figure out how to deal with options (mock dir, base api path)
-- better deal with throwing errors--need to understand best practice.
+- better deal with throwing errors, especially for folder not found--need to understand best practice.

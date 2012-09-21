@@ -1,12 +1,27 @@
- {
+{
   "name": "mocki",
   "version": "0.0.2",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node main"
   },
   "dependencies": {
-    "express": "3.0.0rc4",
+    "express": "3.0.0rc5",
     "node-uuid": "~1.3.3"
-  }
+  },
+  "description": "a little server of mock json files for backbone models/collections.",
+  "main": "main.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/twalker/mocki.git"
+  },
+  "keywords": [
+    "mock",
+    "backbone",
+    "restful",
+    "api"
+  ],
+  "author": "tim walker",
+  "license": "BSD"
 }

@@ -9,7 +9,7 @@ app.configure(function(){
 
 	app.use(express.favicon());
 	app.use(express.logger('dev'));
-	app.use('/api', require('./mountedapp'));
+	app.use('/api', require('./mountedapp')(__dirname + 'mocks'));
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(app.router);
