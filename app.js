@@ -1,31 +1,23 @@
-var express = require('express')
-	, routes = require('./routes')
-	, http = require('http')
-	, path = require('path')
-	, url = require('url');
+var http = require('http'),
+	express = require('express'),
+	url = require('url'),
+	mocki = require('./routes/mocki');
 
 var app = express();
 
-app.configure(function(){
-	app.set('port', process.env.PORT || 8000);
-	app.set('host', process.env.HOST || 'localhost');
+app
+	.set('port', process.env.PORT || 8000)
+	.set('host', process.env.HOST || 'localhost');
 
-	app.use(express.favicon());
-	app.use(express.logger('dev'));
-	app.use(express.bodyParser());
-	app.use(express.methodOverride());
-	app.use(app.router);
-	app.use(express.errorHandler({showStack: true, dumpExceptions: true}));
-});
-
-app.get('/bootstrap', routes.bootstrap);
-app.get('/:collection/:id', routes.show);
-app.get('/:collection', routes.list);
-app.post('/:collection', routes.create);
-app.put('/:collection/:id', routes.update);
-app.del('/:collection/:id', routes.destroy);
-
+app
+	.use(express.favicon())
+	.use(express.logger('dev'))
+	.use(express.bodyParser())
+	.use(app.router)
+	.use('/api', mocki()) // mount mocks at /api
+	.use(express.errorHandler({showStack: true, dumpExceptions: true}));
 
 http.createServer(app).listen(app.get('port'), function(){
-	console.log("😌  mocki listening at: http://" + app.get('host') + ":" + app.get('port'));
+	console.log("client app listening at: http://" + app.get('host') + ":" + app.get('port'));
+	console.log("mock routes mounted on /api");
 });

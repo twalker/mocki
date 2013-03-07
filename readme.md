@@ -1,8 +1,12 @@
-##😌  mocki
-a little server of mock json files for backbone models/collections.  
-mocki saves files in `mocks/` + collectionname.  
+## 😌  mocki
+an little express server of mock json files for backbone models/collections. it's meant to be mounted by an existing
+express app.
 
-mocki has less that 1/1000th the coolness of [nock](https://github.com/flatiron/nock), but I wanted persistence and to learn stuff.
+mocki serves json files in `test/fixtures/:collection`  
+
+maybe someday mocki will grow up to be a grunt task, or accept handy options like a routes hash, or just provide actions...  or maybe remain a little simple script. 
+
+mocki has less that 1/1000th the coolness of [nock](https://github.com/flatiron/nock), but I wanted persistence and to learn stuff. 
 
 ---------------
 
@@ -13,19 +17,43 @@ GET collection/:id?
 list: dynamically return an json array of each `*.json` file in dir.  
 show: `id.json` file
 
-POST collection/  
+POST collection/:id  
 create/save an `id.json` file
 
-PUT collection/id  
+PUT collection/:id  
 update/save an `id.json` file and reflect back the json sent
 	
-DELETE collection/id  
+DELETE collection/:id  
 delete `id.json` file
 
 
 ---------------
-###example usage
-run the mocki server:  `node app`
+
+### usage
+
+to mount mocki, use him like middleware in a hosting express app:
+
+		var http = require('http'),
+				express = require('express'),
+				mocki = require('./routes/mocki');
+		//...
+		app.use('/api', mocki()); // mount mocks at /api
+		//...
+		http.createServer(app).listen(app.get('port'), function(){
+			console.log("mock routes mounted on /api");
+		});
+
+-----------------
+### TODO
+
+- write some unit tests using supertest
+- create should create a collection dir if it doesn't exist
+- double check error handling best practice
+- clean up this mess of a readme
+
+-----------------
+
+### messy notes from mocki's adventures
 
 in the client express app, forward proxy the desired requests, e.g. /api/*
 		
