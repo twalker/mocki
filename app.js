@@ -14,7 +14,7 @@ app
 	.use(express.logger('dev'))
 	.use(express.bodyParser())
 	.use(app.router)
-	.use('/api', mocki()) // mount mocks at /api
+	.use('/api', mocki('/mocks')) // mount mocks at /api
 	.use(express.errorHandler({showStack: true, dumpExceptions: true}));
 
 http.createServer(app).listen(app.get('port'), function(){

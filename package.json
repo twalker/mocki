@@ -3,7 +3,8 @@
   "version": "0.0.3",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "test": "mocha --ui bdd --recursive --reporter spec --timeout 10000 --slow 300"
   },
   "dependencies": {
     "express": "3.1.0",
@@ -11,7 +12,11 @@
   },
   "description": "a little server of mock json files for backbone models/collections.",
   "main": "app.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "~1.8.1",
+    "supertest": "~0.5.1",
+    "chai": "~1.5.0"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/twalker/mocki.git"
