@@ -2,7 +2,7 @@
 an little express server of mock json files for backbone models/collections. it's meant to be mounted by an existing
 express app.
 
-mocki serves json files in `test/fixtures/:collection`  
+mocki serves json files in `test/fixtures/:collection` by default
 
 maybe someday mocki will grow up to be a grunt task, or accept handy options like a routes hash, or just provide actions...  or maybe remain a little simple script. 
 
