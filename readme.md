@@ -36,14 +36,14 @@ alternatively serves a `list.json` instead of one file per model.
 GET :collection/:id  
 shows a `:id.json` file
 
-POST collection/:id  
-creates an `:id.json` file
+POST collection 
+generates a unique id and saves to an `:id.json` file
 
 PUT collection/:id  
 updates an `:id.json` file
 	
 DELETE collection/:id  
-delete `:id.json` file
+deletes `:id.json` file
 
 
 -----------------
