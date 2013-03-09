@@ -9,9 +9,10 @@ var fs = require('fs'),
 var app = require('../app');
 
 //TODO: wrap all the test mocks into a sensible object
-var mocksPath = path.join(__dirname, '..','mocks', 'mycollection'),
+var mocksPath = path.join(__dirname, 'fixtures', 'mycollection'),
 	fooPath = path.join(mocksPath, 'foo.json'),
-	barPath = path.join(mocksPath, 'bar.json');
+	barPath = path.join(mocksPath, 'bar.json'),
+	listPath = path.join(mocksPath, 'list.json');
 
 if(!fs.existsSync(mocksPath)) fs.mkdirSync(mocksPath);
 
@@ -45,7 +46,7 @@ describe('mocki', function(){
 				.expect(200, done);
 		});
 
-		it('should respond with an resource collection/array  from files', function(done){
+		it('should respond with an resource collection/array from files', function(done){
 			request(app)
 				.get('/api/mycollection')
 				.set('Accept', 'application/json')
@@ -56,6 +57,35 @@ describe('mocki', function(){
 					done();
 				});
 		});
+
+		it('should respond with a 404 when the collection dir doesn\'t exist', function(done){
+			request(app)
+				.get('/api/does-not-exist')
+				.expect(404, done);
+		});
+
+		describe('list.json', function(){
+			var collection2 = [{id:"baz"}, {id:"qux"}];
+			before(function(){
+				fs.writeFileSync(listPath, JSON.stringify(collection2));
+			});
+
+			after(function(){
+				fs.unlinkSync(listPath)
+			});
+
+			it('should serve alternative list.json file when it exists', function(done){
+				request(app)
+					.get('/api/mycollection')
+					.end(function(err, res){
+						if(err) return done(err)
+						assert.deepEqual(res.body.sort(byId), collection2.sort(byId));
+						assert.equal(res.body.length, 2)
+						done();
+					});
+
+			});
+		})
 	});
 
 	describe('GET /:collection/:id', function(){
@@ -68,7 +98,7 @@ describe('mocki', function(){
 		});
 		it('should respond with not found', function(done){
 			request(app)
-				.get('/api/mycollection/noexist')
+				.get('/api/mycollection/does-not-exist')
 				.expect(404, done);
 		});
 
@@ -108,9 +138,10 @@ describe('mocki', function(){
 	});
 
 	describe('DELETE /:collection/:id', function(){
-		it('should delete json files', function(done){
+		it('should delete json files and return a 204 "No Content"', function(done){
 			request(app)
 				.del('/api/mycollection/foo')
+				.expect(204)
 				.end(function(err, res){
 					if(err) return done(err)
 					fs.exists(fooPath, function(exists){

@@ -1,44 +1,82 @@
-/*
-	mocki mocks backbone model resource requests
-	and responds with mock json files in /test/fixtures.
+/**
+ * mocki mocks backbone model resource requests
+ * and responds with mock json files in /test/fixtures.
 */
+
 var path = require('path'),
 	fs = require('fs'),
 	uuid = require('node-uuid'),
-	express = require('express');
+	express = require('express'),
+	async = require('async');
 
 var actions = {
-
 	list: function(req, res){
+		// TODO:
+		// cleanup conditional/async/closure mess.
+		// can I use async or some pattern to manage cleanly?
 		var collection = req.param('collection');
 		var dirPath = path.join(mockspath, collection);
+		var listFilePath = path.join(dirPath,'list.json');
 
-		fs.readdir(dirPath, function(err, files){
-			if(err) throw err;
-			var models = [],
-				len = files.length,
-				i = 0;
-
-			var addToList = function addToList(err, data){
-				if(err) throw err;
-
-				models.push(JSON.parse(data));
-				if(i === len -1){
-					res.json(models);
-					//console.log('mock listed', models);
-				} else {
-					i++;
-				}
-			};
-
-			if(len === 0) {
-				res.json(models);
-			} else {
-				files.forEach(function(filename){
-					fs.readFile(path.join(dirPath, filename), addToList);
+		fs.exists(dirPath, function(exists){
+			if(exists){
+				// collection directory exists
+				fs.exists(listFilePath, function(exists){
+					if(exists){
+						// list.json exists, serve that
+						listFile();
+					} else {
+						// generate collection from individual json files
+						files();
+					}
 				});
+
+			} else {
+				// no collection dir
+				dirNotFound();
 			}
 		});
+
+		function listFile(){
+			fs.readFile(listFilePath, function(err, data){
+				if(err) throw err;
+				res.json(JSON.parse(data));
+			});
+		}
+
+		function files() {
+			// put individual .json mocks into an array
+			fs.readdir(dirPath, function(err, files){
+				if(err) throw err;
+				var models = [],
+					len = files.length,
+					i = 0;
+
+				var addToList = function addToList(err, data){
+					if(err) throw err;
+
+					models.push(JSON.parse(data));
+					if(i === len -1){
+						res.json(models);
+					} else {
+						i++;
+					}
+				};
+
+				if(len === 0) {
+					res.json(models);
+				} else {
+					files.forEach(function(filename){
+						fs.readFile(path.join(dirPath, filename), addToList);
+					});
+				}
+			});
+		}
+
+		function dirNotFound(){
+			res.json(404, {error: dirPath + " not found."});
+		}
+
 	},
 
 	show: function(req, res){
@@ -48,7 +86,6 @@ var actions = {
 				fs.readFile(filePath, function(err, data){
 					if(err) throw err;
 					res.json(JSON.parse(data));
-					//console.log('mock shown: ', filePath);
 				});
 			} else {
 				res.json(404, {error: filePath + " not found."});
@@ -64,7 +101,6 @@ var actions = {
 
 		fs.writeFile(filePath, JSON.stringify(json), function (err) {
 			if(err) throw err;
-			//console.log('mock saved: ', filePath);
 		});
 
 		res.json(json);
@@ -79,7 +115,6 @@ var actions = {
 
 		fs.writeFile(filePath, JSON.stringify(json), function (err) {
 			if(err) throw err;
-			//console.log('mock updated: ', filePath);
 		});
 
 		res.json(json);
@@ -89,9 +124,9 @@ var actions = {
 		var filePath = path.join(mockspath, req.param('collection'), req.param('id') + '.json');
 		fs.readFile(filePath, function(err, data){
 			if(err) throw err;
-			res.json(JSON.parse(data));
-			fs.unlink(filePath, function(e){
-				//console.log('mock destroyed: ' + filePath);
+			fs.unlink(filePath, function(err){
+				if(err) throw err;
+				res.send(204);
 			});
 		});
 	}
