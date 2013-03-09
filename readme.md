@@ -29,20 +29,20 @@ e.g. `test/fixtures/slayer-albums`
 
 ###routes
 
-GET :collection  
+GET /api/:collection  
 lists an array of models created from `*.json` files in collection dir.  
 alternatively serves a `list.json` instead of one file per model.
 
-GET :collection/:id  
+GET /api/:collection/:id  
 shows a `:id.json` file
 
-POST collection 
+POST /api/:collection  
 generates a unique id and saves to an `:id.json` file
 
-PUT collection/:id  
+PUT /api/:collection/:id  
 updates an `:id.json` file
 	
-DELETE collection/:id  
+DELETE /api/:collection/:id  
 deletes `:id.json` file
 
 
