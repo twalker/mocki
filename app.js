@@ -3,7 +3,7 @@ var http = require('http'),
 	path = require('path'),
 	mocki = require('./routes/mocki');
 
-var app = express();
+var app = module.exports = express();
 
 app
 	.set('port', process.env.PORT || 8000)
