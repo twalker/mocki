@@ -13,6 +13,8 @@ var mocksPath = path.join(__dirname, '..','mocks', 'mycollection'),
 	fooPath = path.join(mocksPath, 'foo.json'),
 	barPath = path.join(mocksPath, 'bar.json');
 
+if(!fs.existsSync(mocksPath)) fs.mkdirSync(mocksPath);
+
 var mycollection = [
 	{"id":"foo"},
 	{"id":"bar"}
