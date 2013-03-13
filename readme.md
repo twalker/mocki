@@ -46,8 +46,7 @@ DELETE /api/:collection/:id
 deletes `:id.json` file
 
 
-![Build Status](https://travis-ci.org/twalker/mocki.png)](https://travis-ci.org/twalker/mocki)
-
+[![Build Status](https://travis-ci.org/twalker/mocki.png)](https://travis-ci.org/twalker/mocki)
 -----------------
 
 ## messy notes from mocki's adventures
