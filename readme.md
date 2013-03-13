@@ -54,9 +54,9 @@ deletes `:id.json` file
 
 ### TODO
 
--[] use async or something to cleanup the async/conditional madness in list action.
--[] double check error handling best practice
--[] clean up this mess of a readme
+- use async or something to cleanup the async/conditional madness in list action.
+- double check error handling best practice
+- clean up this mess of a readme
 
 need to figure out how exactly I want to use it in app before I get too far. 
 I want to use it to swap out for the real restful resource api based on NODE_ENV.  
