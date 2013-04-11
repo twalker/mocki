@@ -2,7 +2,6 @@
  * mocki mocks backbone model resource requests
  * and responds with mock json files in /test/fixtures.
 */
-
 var path = require('path'),
 	fs = require('fs'),
 	uuid = require('node-uuid'),
@@ -124,10 +123,10 @@ function collectDir(req, res, next){
 	if(req.params.id && req.params.subcollection) {
 		pathParts.push(req.params.id, req.params.subcollection);
 	}
-	//console.log('pathParts', pathParts)
+
 	var collectionDir = path.join.apply(null, pathParts);
 	res._collectionDir = collectionDir;
-	console.warn('setting collection dir to', res._collectionDir)
+	//console.log('setting collection dir to', res._collectionDir)
 	next();
 }
 

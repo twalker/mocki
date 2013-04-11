@@ -45,6 +45,8 @@ updates an `:id.json` file
 DELETE /api/:collection/:id  
 deletes `:id.json` file
 
+All verbs are repeated for a nested resources
+ /api/:collection/:id/:subcollection  
 
 [![Build Status](https://travis-ci.org/twalker/mocki.png)](https://travis-ci.org/twalker/mocki)
 -----------------
