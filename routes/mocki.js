@@ -99,7 +99,7 @@ var actions = {
 		var collection = req.param('collection');
 		var filePath = path.join(mockspath, collection, id + '.json');
 
-		fs.writeFile(filePath, JSON.stringify(json), function (err) {
+		fs.writeFile(filePath, JSON.stringify(json, null, 2), function (err) {
 			if(err) throw err;
 		});
 
@@ -113,7 +113,7 @@ var actions = {
 		var collection = req.param('collection');
 		var filePath = path.join(mockspath, collection, id + '.json');
 
-		fs.writeFile(filePath, JSON.stringify(json), function (err) {
+		fs.writeFile(filePath, JSON.stringify(json, null, 2), function (err) {
 			if(err) throw err;
 		});
 
