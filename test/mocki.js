@@ -8,13 +8,18 @@ var fs = require('fs'),
 
 var app = require('../app');
 
-//TODO: wrap all the test mocks into a sensible object
+// TODO:
+// - wrap all the test mocks into a sensible object
+// - more testing of the subcollection routes
 var mocksPath = path.join(__dirname, 'fixtures', 'mycollection'),
 	fooPath = path.join(mocksPath, 'foo.json'),
 	barPath = path.join(mocksPath, 'bar.json'),
-	listPath = path.join(mocksPath, 'list.json');
+	listPath = path.join(mocksPath, 'list.json'),
+	subPath = path.join(mocksPath, 'foo', 'subcollection'),
+	subResourcePath = path.join(subPath, 'baz.json');
 
 if(!fs.existsSync(mocksPath)) fs.mkdirSync(mocksPath);
+if(!fs.existsSync(subPath)) fs.mkdirSync(subPath);
 
 var mycollection = [
 	{"id":"foo"},
@@ -151,4 +156,24 @@ describe('mocki', function(){
 				});
 		});
 	});
+
+
+	describe(':subcollection', function(){
+
+		it('should respond with a 200 and json', function(done){
+			request(app)
+				.get('/api/mycollection/foo/subcollection')
+				.set('Accept', 'application/json')
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+		it('should respond with a 404 when the collection dir doesn\'t exist', function(done){
+			request(app)
+				.get('/api/mycollection/foo/does-not-exist')
+				.expect(404, done);
+		});
+
+	});
+
 });

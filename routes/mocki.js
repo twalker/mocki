@@ -6,19 +6,14 @@
 var path = require('path'),
 	fs = require('fs'),
 	uuid = require('node-uuid'),
-	express = require('express'),
-	async = require('async');
+	express = require('express');
 
 var actions = {
 	list: function(req, res){
-		// TODO:
-		// cleanup conditional/async/closure mess.
-		// can I use async or some pattern to manage cleanly?
-		var collection = req.param('collection');
-		var dirPath = path.join(mockspath, collection);
-		var listFilePath = path.join(dirPath,'list.json');
+		var collectionDir = res._collectionDir;
+		var listFilePath = path.join(collectionDir, 'list.json');
 
-		fs.exists(dirPath, function(exists){
+		fs.exists(collectionDir, function(exists){
 			if(exists){
 				// collection directory exists
 				fs.exists(listFilePath, function(exists){
@@ -46,9 +41,10 @@ var actions = {
 
 		function files() {
 			// put individual .json mocks into an array
-			fs.readdir(dirPath, function(err, files){
+			fs.readdir(collectionDir, function(err, listing){
 				if(err) throw err;
 				var models = [],
+					files = listing.filter(function(name){return /\.json$/i.test(name)}),
 					len = files.length,
 					i = 0;
 
@@ -67,20 +63,20 @@ var actions = {
 					res.json(models);
 				} else {
 					files.forEach(function(filename){
-						fs.readFile(path.join(dirPath, filename), addToList);
+						fs.readFile(path.join(collectionDir, filename), addToList);
 					});
 				}
 			});
 		}
 
 		function dirNotFound(){
-			res.json(404, {error: dirPath + " not found."});
+			res.json(404, {error: collectionDir + " not found."});
 		}
 
 	},
 
 	show: function(req, res){
-		var filePath = path.join(mockspath, req.param('collection'), req.param('id') + '.json');
+		var filePath = path.join(res._collectionDir, req.param('id') + '.json');
 		fs.exists(filePath, function (exists) {
 			if(exists){
 				fs.readFile(filePath, function(err, data){
@@ -96,22 +92,7 @@ var actions = {
 	create: function(req, res){
 		var json = req.body;
 		var id = json.id = json.id || uuid.v1();
-		var collection = req.param('collection');
-		var filePath = path.join(mockspath, collection, id + '.json');
-
-		fs.writeFile(filePath, JSON.stringify(json, null, 2), function (err) {
-			if(err) throw err;
-		});
-
-		res.json(json);
-	},
-
-	update: function(req, res){
-		// repetitive of create method, refactor
-		var json = req.body;
-		var id = json.id = json.id || uuid.v1();
-		var collection = req.param('collection');
-		var filePath = path.join(mockspath, collection, id + '.json');
+		var filePath = path.join(res._collectionDir, id + '.json');
 
 		fs.writeFile(filePath, JSON.stringify(json, null, 2), function (err) {
 			if(err) throw err;
@@ -121,7 +102,7 @@ var actions = {
 	},
 
 	destroy: function(req, res){
-		var filePath = path.join(mockspath, req.param('collection'), req.param('id') + '.json');
+		var filePath = path.join(res._collectionDir, req.param('id') + '.json');
 		fs.readFile(filePath, function(err, data){
 			if(err) throw err;
 			fs.unlink(filePath, function(err){
@@ -132,7 +113,24 @@ var actions = {
 	}
 };
 
-var mockspath = path.join(__dirname,'..' ,'test', 'fixtures');
+var mockspath = path.join(__dirname, '..' , 'test', 'fixtures');
+
+// generates a collection dir from the route parameters
+function collectDir(req, res, next){
+	if(res._collectionDir) return next();
+
+	var pathParts = [mockspath, req.params.collection];
+	// are we looking to serve a subcollection?
+	if(req.params.id && req.params.subcollection) {
+		pathParts.push(req.params.id, req.params.subcollection);
+	}
+	//console.log('pathParts', pathParts)
+	var collectionDir = path.join.apply(null, pathParts);
+	res._collectionDir = collectionDir;
+	console.warn('setting collection dir to', res._collectionDir)
+	next();
+}
+
 
 module.exports = function(fixturesPath){
 	var app = express();
@@ -140,12 +138,22 @@ module.exports = function(fixturesPath){
 		mockspath = fixturesPath;
 	}
 
+	// json only please
+	app.use(express.json());
+
 	// route to typical RESTful resource actions
-	app.get('/:collection/:id', actions.show);
-	app.get('/:collection', actions.list);
-	app.post('/:collection', actions.create);
-	app.put('/:collection/:id', actions.update);
-	app.del('/:collection/:id', actions.destroy);
+	app.get('/:collection/:id', collectDir, actions.show);
+	app.get('/:collection', collectDir, actions.list);
+	app.post('/:collection', collectDir, actions.create);
+	app.put('/:collection/:id', collectDir, actions.create);
+	app.del('/:collection/:id', collectDir, actions.destroy);
+
+	// nested subcollections/resources
+	app.get('/:collection/:id/:subcollection/:id', collectDir, actions.show);
+	app.get('/:collection/:id/:subcollection', collectDir, actions.list);
+	app.post('/:collection/:id/:subcollection', collectDir, actions.create);
+	app.put('/:collection/:id/:subcollection/:id', collectDir, actions.create);
+	app.del('/:collection/:id/:subcollection/:id', collectDir, actions.destroy);
 
 	return app;
 };

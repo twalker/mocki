@@ -12,7 +12,6 @@ app
 app
 	.use(express.favicon())
 	.use(express.logger('dev'))
-	.use(express.bodyParser())
 	.use(app.router)
 	.use('/api', mocki()) // mocki mount at /api
 	.use(express.errorHandler({showStack: true, dumpExceptions: true}));
