@@ -17,7 +17,7 @@ create directories for collections to store json files.
 e.g. `test/fixtures/slayer-albums`
 
 place your fixture/mock files in the collection folders named by id.  
-e.g. `123.json`
+e.g. `south-of-heaven.json`
 
 #### mounting as an sub-app
 
@@ -38,15 +38,16 @@ the [standalone server](app.js) does just that.
 #### running as a stand-alone express app
 
 `$ npm start`  
-
-	mocki mounted at: http://localhost:8000/api
+`mocki mounted at: http://localhost:8000/api`  
 
 then, start sending your xhr requests to the hosted url:
 
-		Backbone.Collection.extend({
-			url: 'http://localhost:8000/api',
+		var SlayerAlbums = Backbone.Collection.extend({
+			url: 'http://localhost:8000/api/slayer-albums',
 			...
 		});
+		var slayer = new SlayerCollection();
+		slayer.fetch();
 
 Origin headers are set to allow CORS.
 
