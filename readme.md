@@ -19,6 +19,8 @@ e.g. `test/fixtures/slayer-albums`
 place your fixture/mock files in the collection folders named by id.  
 e.g. `south-of-heaven.json`
 
+
+
 #### mounting as an sub-app
 
 to **mount** mocki, copy `routes/mocki.js` and use as middleware in a hosting express app:
@@ -46,8 +48,8 @@ then, start sending your xhr requests to the hosted url:
 			url: 'http://localhost:8000/api/slayer-albums',
 			...
 		});
-		var slayer = new SlayerCollection();
-		slayer.fetch();
+		var slayer = new SlayerAlbums();
+		slayer.fetch()
 
 Origin headers are set to allow CORS.
 
