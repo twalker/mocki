@@ -1,6 +1,5 @@
 var http = require('http'),
 	express = require('express'),
-	path = require('path'),
 	mocki = require('./routes/mocki');
 
 var app = module.exports = express();
@@ -17,6 +16,5 @@ app
 	.use(express.errorHandler({showStack: true, dumpExceptions: true}));
 
 http.createServer(app).listen(app.get('port'), function(){
-	console.log("client app listening at: http://" + app.get('host') + ":" + app.get('port'));
-	console.log("mock routes mounted on /api");
+	console.log('mocki mounted at: http://' + app.get('host') + ':' + app.get('port') + '/api');
 });

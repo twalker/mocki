@@ -8,6 +8,7 @@ var path = require('path'),
 	express = require('express');
 
 var actions = {
+
 	list: function(req, res){
 		var collectionDir = res._collectionDir;
 		var listFilePath = path.join(collectionDir, 'list.json');
@@ -110,6 +111,7 @@ var actions = {
 			});
 		});
 	}
+
 };
 
 var mockspath = path.join(__dirname, '..' , 'test', 'fixtures');
@@ -130,6 +132,13 @@ function collectDir(req, res, next){
 	next();
 }
 
+// set origin headers to allow CORS
+function setOrigin(req, res, next){
+	res.header('X-Powered-By', 'mocki');
+	res.header("Access-Control-Allow-Origin", req.header('origin'));
+	res.header("Access-Control-Allow-Headers", "X-Requested-With");
+	next();
+}
 
 module.exports = function(fixturesPath){
 	var app = express();
@@ -137,8 +146,10 @@ module.exports = function(fixturesPath){
 		mockspath = fixturesPath;
 	}
 
-	// json only please
+	// json body please
 	app.use(express.json());
+	// allow cross origin xhr
+	app.use(setOrigin);
 
 	// route to typical RESTful resource actions
 	app.get('/:collection/:id', collectDir, actions.show);
@@ -156,6 +167,3 @@ module.exports = function(fixturesPath){
 
 	return app;
 };
-
-
-
