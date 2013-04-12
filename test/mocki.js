@@ -8,9 +8,6 @@ var fs = require('fs'),
 
 var app = require('../app');
 
-// TODO:
-// - wrap all the test mocks into a sensible object
-// - more testing of the subcollection routes
 var mocksPath = path.join(__dirname, 'fixtures', 'mycollection'),
 	fooPath = path.join(mocksPath, 'foo.json'),
 	barPath = path.join(mocksPath, 'bar.json'),
@@ -34,20 +31,24 @@ describe('mocki', function(){
 	beforeEach(function(){
 		fs.writeFileSync(fooPath, JSON.stringify({"id":"foo"}))
 		fs.writeFileSync(barPath, JSON.stringify({"id":"bar"}))
+		fs.writeFileSync(subResourcePath, JSON.stringify({"id":"baz"}))
 	});
 
 	afterEach(function(){
 		if(fs.existsSync(fooPath)) fs.unlinkSync(fooPath)
 		if(fs.existsSync(barPath)) fs.unlinkSync(barPath)
+		if(fs.existsSync(subResourcePath)) fs.unlinkSync(subResourcePath)
 	});
 
 	describe('GET /:collection', function(){
 
-		it('should respond with json', function(done){
+		it('should set json and allow origin headers to support CORS requests', function(done){
 			request(app)
 				.get('/api/mycollection')
 				.set('Accept', 'application/json')
+				.set('Origin', 'http://foo.com')
 				.expect('Content-Type', /json/)
+				.expect('Access-Control-Allow-Origin', /[\*|http:\/\/foo\.com]/)
 				.expect(200, done);
 		});
 
@@ -157,23 +158,80 @@ describe('mocki', function(){
 		});
 	});
 
+	describe('GET :subcollection', function(){
 
-	describe(':subcollection', function(){
-
-		it('should respond with a 200 and json', function(done){
+		it('should respond with a 200 and json for a collection', function(done){
 			request(app)
 				.get('/api/mycollection/foo/subcollection')
 				.set('Accept', 'application/json')
 				.expect('Content-Type', /json/)
+				.expect([{"id":"baz"}])
 				.expect(200, done);
 		});
 
-		it('should respond with a 404 when the collection dir doesn\'t exist', function(done){
+		it('should respond with a 404 when a subcollection dir doesn\'t exist', function(done){
 			request(app)
 				.get('/api/mycollection/foo/does-not-exist')
 				.expect(404, done);
 		});
 
+	});
+
+	describe('GET /:collection/:id/:subcollection/:subid', function(){
+		it('should show a single subresource', function(done){
+			request(app)
+				.get('/api/mycollection/foo/subcollection/baz')
+				.set('Accept', 'application/json')
+				.expect({"id":"baz"}, done);
+		});
+	});
+
+	describe('POST /:collection/:id/:subcollection', function(){
+		var filepath = path.join(subPath, 'qux.json');
+
+		after(function(){
+			fs.unlinkSync(filepath)
+		});
+
+		it('should create json files from post', function(done){
+			request(app)
+				.post('/api/mycollection/foo/subcollection')
+				.send({"id": "qux"})
+				.expect({"id": "qux"})
+				.end(function(err, res){
+					if(err) return done(err)
+					fs.exists(filepath, function(exists){
+						assert(exists);
+						done()
+					});
+				});
+		});
+	});
+
+	describe('PUT /:collection/:id/:subcollection/:subid', function(){
+
+		it('should update json files', function(done){
+			request(app)
+				.put('/api/mycollection/foo/subcollection/baz')
+				.send({"id": "baz", "a": 1})
+				.expect({"id": "baz", "a": 1})
+				.end(done);
+		});
+	});
+
+	describe('DELETE /:collection/:id/:subcollection/:subid', function(){
+		it('should delete json files and return a 204 "No Content"', function(done){
+			request(app)
+				.del('/api/mycollection/foo/subcollection/baz')
+				.expect(204)
+				.end(function(err, res){
+					if(err) return done(err)
+					fs.exists(subResourcePath, function(exists){
+						assert(!exists);
+						done();
+					});
+				});
+		});
 	});
 
 });

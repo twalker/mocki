@@ -1,6 +1,6 @@
 /**
- * mocki mocks backbone model resource requests
- * and responds with mock json files in /test/fixtures.
+ * mocki mocks backbone model resource requests by
+ * responding with mock json files in /test/fixtures.
 */
 var path = require('path'),
 	fs = require('fs'),
@@ -70,13 +70,13 @@ var actions = {
 		}
 
 		function dirNotFound(){
-			res.json(404, {error: collectionDir + " not found."});
+			res.json(404, {error: collectionDir + ' not found.'});
 		}
 
 	},
 
 	show: function(req, res){
-		var filePath = path.join(res._collectionDir, req.param('id') + '.json');
+		var filePath = path.join(res._collectionDir, res._mockId + '.json');
 		fs.exists(filePath, function (exists) {
 			if(exists){
 				fs.readFile(filePath, function(err, data){
@@ -84,7 +84,7 @@ var actions = {
 					res.json(JSON.parse(data));
 				});
 			} else {
-				res.json(404, {error: filePath + " not found."});
+				res.json(404, {error: filePath + ' not found.'});
 			}
 		});
 	},
@@ -102,7 +102,7 @@ var actions = {
 	},
 
 	destroy: function(req, res){
-		var filePath = path.join(res._collectionDir, req.param('id') + '.json');
+		var filePath = path.join(res._collectionDir, res._mockId + '.json');
 		fs.readFile(filePath, function(err, data){
 			if(err) throw err;
 			fs.unlink(filePath, function(err){
@@ -116,7 +116,7 @@ var actions = {
 
 var mockspath = path.join(__dirname, '..' , 'test', 'fixtures');
 
-// generates a collection dir from the route parameters
+// sets a _collectionDir and _mockId variable from the route parameters
 function collectDir(req, res, next){
 	if(res._collectionDir) return next();
 
@@ -125,18 +125,17 @@ function collectDir(req, res, next){
 	if(req.params.id && req.params.subcollection) {
 		pathParts.push(req.params.id, req.params.subcollection);
 	}
-
-	var collectionDir = path.join.apply(null, pathParts);
-	res._collectionDir = collectionDir;
-	//console.log('setting collection dir to', res._collectionDir)
+	// explicitly set the id since there could be id, or id and subid
+	res._mockId = req.params.subid || req.params.id;
+	res._collectionDir = path.join.apply(null, pathParts);
 	next();
 }
 
 // set origin headers to allow CORS
 function setOrigin(req, res, next){
 	res.header('X-Powered-By', 'mocki');
-	res.header("Access-Control-Allow-Origin", req.header('origin'));
-	res.header("Access-Control-Allow-Headers", "X-Requested-With");
+	res.header('Access-Control-Allow-Origin', req.header('origin') || '*');
+	res.header('Access-Control-Allow-Headers', 'X-Requested-With');
 	next();
 }
 
@@ -159,11 +158,11 @@ module.exports = function(fixturesPath){
 	app.del('/:collection/:id', collectDir, actions.destroy);
 
 	// nested subcollections/resources
-	app.get('/:collection/:id/:subcollection/:id', collectDir, actions.show);
+	app.get('/:collection/:id/:subcollection/:subid', collectDir, actions.show);
 	app.get('/:collection/:id/:subcollection', collectDir, actions.list);
 	app.post('/:collection/:id/:subcollection', collectDir, actions.create);
-	app.put('/:collection/:id/:subcollection/:id', collectDir, actions.create);
-	app.del('/:collection/:id/:subcollection/:id', collectDir, actions.destroy);
+	app.put('/:collection/:id/:subcollection/:subid', collectDir, actions.create);
+	app.del('/:collection/:id/:subcollection/:subid', collectDir, actions.destroy);
 
 	return app;
 };

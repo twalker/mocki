@@ -1,4 +1,5 @@
 ## 😌  mocki
+
 an little server of mock json files for backbone models & collections. 
 It can be mounted by an existing express app or run as a standalone server.
 
@@ -36,9 +37,18 @@ the [standalone server](app.js) does just that.
 
 #### running as a stand-alone express app
 
-`npm start`
-send your xhr requests to the hosted url. Origin headers are set to allow CORS.
+`$ npm start`  
 
+	mocki mounted at: http://localhost:8000/api
+
+then, start sending your xhr requests to the hosted url:
+
+		Backbone.Collection.extend({
+			url: 'http://localhost:8000/api',
+			...
+		});
+
+Origin headers are set to allow CORS.
 
 ###routes
 
@@ -58,8 +68,8 @@ updates an `:id.json` file
 DELETE /api/:collection/:id  
 deletes `:id.json` file
 
-All verbs are repeated for a nested resources
- /api/:collection/:id/:subcollection  
+All verbs are repeated for a nested resources  
+[VERB] /api/:collection/:id/:subcollection  
 
 [![Build Status](https://travis-ci.org/twalker/mocki.png)](https://travis-ci.org/twalker/mocki)
 -----------------
