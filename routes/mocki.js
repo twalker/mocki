@@ -44,7 +44,7 @@ var actions = {
 			fs.readdir(collectionDir, function(err, listing){
 				if(err) throw err;
 				var models = [],
-					files = listing.filter(function(name){return /\.json$/i.test(name)}),
+					files = listing.filter(function(name){return (/\.json$/i).test(name);}),
 					len = files.length,
 					i = 0;
 
@@ -141,14 +141,13 @@ function setOrigin(req, res, next){
 
 module.exports = function(fixturesPath){
 	var app = express();
-	if(fixturesPath) {
-		mockspath = fixturesPath;
-	}
+	if(fixturesPath) mockspath = fixturesPath;
 
 	// json body please
-	app.use(express.json());
-	// allow cross origin xhr
-	app.use(setOrigin);
+	app
+		.use(express.json())
+		// allow cross origin xhr
+		.use(setOrigin);
 
 	// route to typical RESTful resource actions
 	app.get('/:collection/:id', collectDir, actions.show);
