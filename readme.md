@@ -22,7 +22,7 @@ e.g. `south-of-heaven.json`
 
 
 
-#### mounting as an sub-app
+#### mounting as a sub-app
 
 to **mount** mocki, copy `routes/mocki.js` and use as middleware in a hosting express app:
 
