@@ -1,11 +1,12 @@
 ## 😌  mocki
 
-an little server of mock json files for backbone models & collections. 
+A little server of mock json files for backbone models & collections. 
 It can be mounted by an existing express app or run as a standalone server.
 
 it serves json files in `test/fixtures/:collection` by default
 
-maybe someday mocki will grow up to be a grunt task, or accept handy options like a routes hash, or just provide actions...  or maybe remain a happy little script. 
+maybe someday mocki will grow up to be a grunt task, or accept handy options like a routes hash, or just provide actions...  
+or maybe remain a happy little script. 
 
 mocki has less that 1/1000th the coolness of [nock](https://github.com/flatiron/nock), but I wanted persistence and to learn stuff. 
 
@@ -75,20 +76,12 @@ All verbs are repeated for a nested resources
 [VERB] /api/:collection/:id/:subcollection  
 
 [![Build Status](https://travis-ci.org/twalker/mocki.png)](https://travis-ci.org/twalker/mocki)
+
 -----------------
-
-## messy notes from mocki's adventures
-
 
 ### TODO
 
--- double check error handling best practice
-- clean up this mess of a readme
-
-need to figure out how exactly I want to use it in app before I get too far. 
-I want to use it to swap out for the real restful resource api based on NODE_ENV.  
-Stand alone server or middleware?  
-If middleware, I can use it per collection and let the routing be handled by the consuming app. mocki just responds and lets the client determine which requests to forward.
+- double check error handling best practice
 
 My cat sniffed this work, and typed:  
 00000000000000000000000000000
