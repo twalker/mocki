@@ -4,7 +4,7 @@
 */
 var path = require('path'),
 	fs = require('fs'),
-	uuid = require('node-uuid'),
+	cuid = require('cuid'),
 	express = require('express');
 
 var actions = {
@@ -91,7 +91,7 @@ var actions = {
 
 	create: function(req, res){
 		var json = req.body;
-		var id = json.id = json.id || uuid.v1();
+		var id = json.id = json.id || cuid();
 		var filePath = path.join(res._collectionDir, id + '.json');
 
 		fs.writeFile(filePath, JSON.stringify(json, null, 2), function (err) {
