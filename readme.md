@@ -77,6 +77,8 @@ All verbs are repeated for a nested resources
 
 [![Build Status](https://travis-ci.org/twalker/mocki.png)](https://travis-ci.org/twalker/mocki)
 
+![Dependencies](https://david-dm.org/twalker/mocki.png)
+
 -----------------
 
 ### TODO
