@@ -26,15 +26,15 @@ e.g. `south-of-heaven.json`
 
 to **mount** mocki, copy `routes/mocki.js` and use as middleware in a hosting express app:
 
-		var http = require('http'),
-				express = require('express'),
-				mocki = require('./routes/mocki');
-		//...
-		app.use('/api', mocki()); // mount mocks at /api
-		//...
-		http.createServer(app).listen(app.get('port'), function(){
-			console.log("mock routes mounted on /api");
-		});
+    var http = require('http'),
+        express = require('express'),
+        mocki = require('./routes/mocki');
+    //...
+    app.use('/api', mocki()); // mount mocks at /api
+    //...
+    http.createServer(app).listen(app.get('port'), function(){
+      console.log("mock routes mounted on /api");
+    });
 
 the [standalone server](app.js) does just that.
 
@@ -45,12 +45,12 @@ the [standalone server](app.js) does just that.
 
 then, start sending your xhr requests to the hosted url:
 
-		var SlayerAlbums = Backbone.Collection.extend({
-			url: 'http://localhost:8000/api/slayer-albums',
-			...
-		});
-		var slayer = new SlayerAlbums();
-		slayer.fetch()
+    var SlayerAlbums = Backbone.Collection.extend({
+      url: 'http://localhost:8000/api/slayer-albums',
+      ...
+    });
+    var slayer = new SlayerAlbums();
+    slayer.fetch()
 
 Origin headers are set to allow CORS.
 
@@ -68,7 +68,7 @@ generates a unique id and saves to an `:id.json` file
 
 PUT /api/:collection/:id  
 updates an `:id.json` file
-	
+  
 DELETE /api/:collection/:id  
 deletes `:id.json` file
 
