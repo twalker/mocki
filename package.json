@@ -18,13 +18,17 @@
   },
   "main": "app.js",
   "dependencies": {
-    "express": "3.3.5",
-    "cuid": "~1.2.1"
+    "express": "4.0.0",
+    "cuid": "~1.2.1",
+    "body-parser": "^1.0.1"
   },
   "devDependencies": {
-    "mocha": "~1.12.0",
-    "supertest": "~0.7.1",
-    "chai": "~1.7.2"
+    "mocha": "~1.18.2",
+    "supertest": "~0.10.0",
+    "chai": "~1.9.1",
+    "errorhandler": "^1.0.0",
+    "morgan": "^1.0.0",
+    "static-favicon": "^1.0.2"
   },
   "scripts": {
     "start": "node app",

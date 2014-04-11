@@ -9,11 +9,10 @@ app
   .set('host', process.env.HOST || 'localhost');
 
 app
-  .use(express.favicon())
-  .use(express.logger('dev'))
-  .use(app.router)
+  .use(require('static-favicon')())
+  .use(require('morgan')('dev'))
   .use('/api', mocki()) // mocki mount at /api
-  .use(express.errorHandler({showStack: true, dumpExceptions: true}));
+  .use(require('errorhandler')({ dumpExceptions: true, showStack: true }));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('mocki mounted at: http://' + app.get('host') + ':' + app.get('port') + '/api');

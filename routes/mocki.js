@@ -5,7 +5,8 @@
 var path = require('path'),
   fs = require('fs'),
   cuid = require('cuid'),
-  express = require('express');
+  express = require('express'),
+  bodyParser = require('body-parser');
 
 var actions = {
 
@@ -140,28 +141,28 @@ function setOrigin(req, res, next){
 }
 
 module.exports = function(fixturesPath){
-  var app = express();
+  var mocks = express.Router();
   if(fixturesPath) mockspath = fixturesPath;
 
   // json body please
-  app
-    .use(express.json())
+  mocks
+    .use(bodyParser.json())
     // allow cross origin xhr
     .use(setOrigin);
 
   // route to typical RESTful resource actions
-  app.get('/:collection/:id', collectDir, actions.show);
-  app.get('/:collection', collectDir, actions.list);
-  app.post('/:collection', collectDir, actions.create);
-  app.put('/:collection/:id', collectDir, actions.create);
-  app.del('/:collection/:id', collectDir, actions.destroy);
+  mocks.get('/:collection/:id', collectDir, actions.show);
+  mocks.get('/:collection', collectDir, actions.list);
+  mocks.post('/:collection', collectDir, actions.create);
+  mocks.put('/:collection/:id', collectDir, actions.create);
+  mocks.delete('/:collection/:id', collectDir, actions.destroy);
 
   // nested subcollections/resources
-  app.get('/:collection/:id/:subcollection/:subid', collectDir, actions.show);
-  app.get('/:collection/:id/:subcollection', collectDir, actions.list);
-  app.post('/:collection/:id/:subcollection', collectDir, actions.create);
-  app.put('/:collection/:id/:subcollection/:subid', collectDir, actions.create);
-  app.del('/:collection/:id/:subcollection/:subid', collectDir, actions.destroy);
+  mocks.get('/:collection/:id/:subcollection/:subid', collectDir, actions.show);
+  mocks.get('/:collection/:id/:subcollection', collectDir, actions.list);
+  mocks.post('/:collection/:id/:subcollection', collectDir, actions.create);
+  mocks.put('/:collection/:id/:subcollection/:subid', collectDir, actions.create);
+  mocks.delete('/:collection/:id/:subcollection/:subid', collectDir, actions.destroy);
 
-  return app;
+  return mocks;
 };
