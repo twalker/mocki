@@ -20,7 +20,7 @@
   "dependencies": {
     "express": "4.0.0",
     "cuid": "~1.2.1",
-    "body-parser": "^1.0.1"
+    "body-parser": "1.0.1"
   },
   "devDependencies": {
     "mocha": "~1.18.2",
