@@ -2,11 +2,9 @@ var fs = require('fs'),
   path = require('path'),
   chai = require("chai"),
   assert = chai.assert,
-  expect = chai.expect,
-  request = require('supertest'),
-  express = require('express');
+  request = require('supertest');
 
-var app = require('../app');
+var app = require('../server');
 
 var mocksPath = path.join(__dirname, 'fixtures', 'mycollection'),
   fooPath = path.join(mocksPath, 'foo.json'),

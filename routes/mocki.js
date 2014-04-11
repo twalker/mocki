@@ -149,32 +149,31 @@ module.exports = function(fixturesPath){
     .use(bodyParser.json())
     // allow cross origin xhr
     .use(setOrigin);
-    //.use(collectDir);
 
+  // nested subcollections/resources
+  mocks.route('/:collection/:id/:subcollection/:subid')
+    .all(collectDir)
+    .get(actions.show)
+    .put(actions.create)
+    .delete(actions.destroy);
 
-  // route to typical RESTful resource actions
-  mocks.route('/:collection')
+  mocks.route('/:collection/:id/:subcollection')
     .all(collectDir)
     .get(actions.list)
     .post(actions.create);
 
+
+  // route to typical RESTful resource actions
   mocks.route('/:collection/:id')
     .all(collectDir)
     .get(actions.show)
     .put(actions.create)
     .delete(actions.destroy);
 
-  // nested subcollections/resources
-  mocks.route('/:collection/:id/:subcollection')
+  mocks.route('/:collection')
     .all(collectDir)
     .get(actions.list)
     .post(actions.create);
-
-  mocks.route('/:collection/:id/:subcollection/:subid')
-    .all(collectDir)
-    .get(actions.show)
-    .put(actions.create)
-    .delete(actions.destroy);
 
   return mocks;
 };

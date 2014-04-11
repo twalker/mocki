@@ -28,7 +28,7 @@ to **mount** mocki, copy `routes/mocki.js` and use as middleware in a hosting ex
 
     var http = require('http'),
         express = require('express'),
-        mocki = require('./routes/mocki');
+        mocki = require('mocki');
     //...
     app.use('/api', mocki()); // mount mocks at /api
     //...

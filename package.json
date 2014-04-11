@@ -1,6 +1,6 @@
 {
   "name": "mocki",
-  "version": "0.0.3",
+  "version": "0.4.0",
   "private": true,
   "author": "tim walker",
   "license": "MIT",
@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git://github.com/twalker/mocki.git"
   },
-  "main": "app.js",
+  "main": "./routes/mocki.js",
   "dependencies": {
     "express": "4.0.0",
     "cuid": "~1.2.1",
@@ -31,7 +31,7 @@
     "static-favicon": "^1.0.2"
   },
   "scripts": {
-    "start": "node app",
+    "start": "node server",
     "test": "mocha --ui bdd --recursive --reporter spec --timeout 10000 --slow 300"
   }
 }
