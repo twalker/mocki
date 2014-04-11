@@ -149,20 +149,32 @@ module.exports = function(fixturesPath){
     .use(bodyParser.json())
     // allow cross origin xhr
     .use(setOrigin);
+    //.use(collectDir);
+
 
   // route to typical RESTful resource actions
-  mocks.get('/:collection/:id', collectDir, actions.show);
-  mocks.get('/:collection', collectDir, actions.list);
-  mocks.post('/:collection', collectDir, actions.create);
-  mocks.put('/:collection/:id', collectDir, actions.create);
-  mocks.delete('/:collection/:id', collectDir, actions.destroy);
+  mocks.route('/:collection')
+    .all(collectDir)
+    .get(actions.list)
+    .post(actions.create);
+
+  mocks.route('/:collection/:id')
+    .all(collectDir)
+    .get(actions.show)
+    .put(actions.create)
+    .delete(actions.destroy);
 
   // nested subcollections/resources
-  mocks.get('/:collection/:id/:subcollection/:subid', collectDir, actions.show);
-  mocks.get('/:collection/:id/:subcollection', collectDir, actions.list);
-  mocks.post('/:collection/:id/:subcollection', collectDir, actions.create);
-  mocks.put('/:collection/:id/:subcollection/:subid', collectDir, actions.create);
-  mocks.delete('/:collection/:id/:subcollection/:subid', collectDir, actions.destroy);
+  mocks.route('/:collection/:id/:subcollection')
+    .all(collectDir)
+    .get(actions.list)
+    .post(actions.create);
+
+  mocks.route('/:collection/:id/:subcollection/:subid')
+    .all(collectDir)
+    .get(actions.show)
+    .put(actions.create)
+    .delete(actions.destroy);
 
   return mocks;
 };
