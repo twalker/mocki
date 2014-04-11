@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git://github.com/twalker/mocki.git"
   },
-  "main": "./routes/mocki.js",
+  "main": "index.js",
   "dependencies": {
     "express": "4.0.0",
     "cuid": "~1.2.1",
