@@ -8,6 +8,8 @@ var path = require('path'),
   express = require('express'),
   bodyParser = require('body-parser');
 
+var mockspath = path.join(__dirname, '..' , '..', '..', 'test', 'fixtures');
+
 var actions = {
 
   list: function(req, res){
@@ -115,8 +117,6 @@ var actions = {
 
 };
 
-var mockspath = path.join(__dirname, '..' , 'test', 'fixtures');
-
 // sets a _collectionDir and _mockId variable from the route parameters
 function collectDir(req, res, next){
   if(res._collectionDir) return next();
@@ -144,13 +144,13 @@ module.exports = function(fixturesPath){
   var mocks = express.Router();
   if(fixturesPath) mockspath = fixturesPath;
 
-  // json body please
+
   mocks
     .use(bodyParser.json())
     // allow cross origin xhr
     .use(setOrigin);
 
-  // nested subcollections/resources
+  // nested subcollections/resources actions
   mocks.route('/:collection/:id/:subcollection/:subid')
     .all(collectDir)
     .get(actions.show)
@@ -162,8 +162,7 @@ module.exports = function(fixturesPath){
     .get(actions.list)
     .post(actions.create);
 
-
-  // route to typical RESTful resource actions
+  // typical RESTful resource actions
   mocks.route('/:collection/:id')
     .all(collectDir)
     .get(actions.show)

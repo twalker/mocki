@@ -1,12 +1,12 @@
 ## 😌  mocki
 
 A little server of mock json files for backbone models & collections. 
-It can be mounted by an existing express app or run as a standalone server.
+It can be `use`ed  by an existing express app or run as a standalone server.
 
-it serves json files in `test/fixtures/:collection` by default
+It serves json files in `test/fixtures/:collection/` by default
 
-maybe someday mocki will grow up to be a grunt task, or accept handy options like a routes hash, or just provide actions...  
-or maybe remain a happy little script. 
+Maybe someday mocki will grow up to accept handy options like a routes hash that just provide actions...  
+or maybe remain a little script that's happy to stick with a simple convention.
 
 mocki has less that 1/1000th the coolness of [nock](https://github.com/flatiron/nock), but I wanted persistence and to learn stuff. 
 
@@ -22,21 +22,19 @@ e.g. `south-of-heaven.json`
 
 
 
-#### mounting as a sub-app
-
-to **mount** mocki, copy `routes/mocki.js` and use as middleware in a hosting express app:
+#### `using` in an existing app
 
     var http = require('http'),
         express = require('express'),
         mocki = require('mocki');
     //...
-    app.use('/api', mocki()); // mount mocks at /api
+    app.use('/api', mocki()); // mocki to handle routes to /api
     //...
     http.createServer(app).listen(app.get('port'), function(){
       console.log("mock routes mounted on /api");
     });
 
-the [standalone server](app.js) does just that.
+the [standalone server](server.js) does just that.
 
 #### running as a stand-alone express app
 
