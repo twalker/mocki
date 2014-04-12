@@ -8,7 +8,7 @@ var path = require('path'),
   express = require('express'),
   bodyParser = require('body-parser');
 
-var mockspath = path.join(__dirname, '..' , '..', '..', 'test', 'fixtures');
+var mockspath = path.join(__dirname, '..', '..', '..', 'test', 'fixtures');
 
 var actions = {
 

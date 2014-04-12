@@ -1,6 +1,7 @@
-var http = require('http'),
-  express = require('express'),
-  mocki = require('./routes/mocki');
+var http = require('http')
+  , express = require('express')
+  , path = require('path')
+  , mocki = require('./index');
 
 var app = module.exports = express();
 
@@ -11,7 +12,7 @@ app
 app
   .use(require('static-favicon')())
   .use(require('morgan')('dev'))
-  .use('/api', mocki()) // mocki mount at /api
+  .use('/api', mocki(path.join(__dirname, 'test', 'fixtures'))) // mocki mount at /api
   .use(require('errorhandler')({ dumpExceptions: true, showStack: true }));
 
 http.createServer(app).listen(app.get('port'), function(){
