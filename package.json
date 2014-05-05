@@ -1,6 +1,6 @@
 {
   "name": "mocki",
-  "version": "0.4.21",
+  "version": "0.4.22",
   "private": true,
   "author": "tim walker",
   "license": "MIT",
@@ -18,17 +18,16 @@
   },
   "main": "index.js",
   "dependencies": {
-    "express": "4.0.0",
-    "cuid": "~1.2.1",
-    "body-parser": "1.0.1"
+    "body-parser": "1.0.2",
+    "cuid": "~1.2.4",
+    "express": "4.1.1"
   },
   "devDependencies": {
     "mocha": "~1.18.2",
-    "supertest": "~0.10.0",
+    "supertest": "~0.12.0",
     "chai": "~1.9.1",
-    "errorhandler": "^1.0.0",
-    "morgan": "^1.0.0",
-    "static-favicon": "^1.0.2"
+    "errorhandler": "^1.0.1",
+    "morgan": "^1.0.1"
   },
   "scripts": {
     "start": "node server",

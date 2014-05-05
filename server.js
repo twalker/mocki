@@ -10,7 +10,6 @@ app
   .set('host', process.env.HOST || 'localhost');
 
 app
-  .use(require('static-favicon')())
   .use(require('morgan')('dev'))
   .use('/api', mocki(path.join(__dirname, 'test', 'fixtures'))) // mocki mount at /api
   .use(require('errorhandler')({ dumpExceptions: true, showStack: true }));
