@@ -79,13 +79,12 @@ var actions = {
   },
 
   show: function(req, res){
-    var filePath = path.join(res._collectionDir, res._mockId + '.json');
+    var format = req.accepts(['json', 'html', 'text']);
+    var filePath = path.join(res._collectionDir, res._mockId + '.' + format);
+    console.log('mocki format', format);
     fs.exists(filePath, function (exists) {
       if(exists){
-        fs.readFile(filePath, function(err, data){
-          if(err) throw err;
-          res.json(JSON.parse(data));
-        });
+        res.sendfile(filePath);
       } else {
         res.json(404, {error: filePath + ' not found.'});
       }
