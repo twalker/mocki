@@ -79,16 +79,9 @@ var actions = {
   },
 
   show: function(req, res){
-    var format = req.accepts(['json', 'html', 'text']);
-    var filePath = path.join(res._collectionDir, res._mockId + '.' + format);
-    console.log('mocki format', format);
-    fs.exists(filePath, function (exists) {
-      if(exists){
-        res.sendfile(filePath);
-      } else {
-        res.json(404, {error: filePath + ' not found.'});
-      }
-    });
+    var ext = req.accepts(['json', 'html', 'text']);
+    var filePath = path.join(res._collectionDir, res._mockId + '.' + ext);
+    res.sendfile(filePath);
   },
 
   create: function(req, res){
@@ -101,6 +94,26 @@ var actions = {
     });
 
     res.json(json);
+  },
+
+  update: function(req, res){
+    var ext = req.accepts(['json', 'html', 'text']);
+    var id = res._mockId
+    var filePath = path.join(res._collectionDir, id + '.' + ext);
+    var ws;
+
+    if('json' === ext) {
+      fs.writeFile(filePath, JSON.stringify(req.body, null, 2), function (err) {
+        if(err) throw err;
+        res.sendfile(filePath);
+      });
+    } else {
+      ws = fs.createWriteStream(filePath);
+      ws.on('close', function(){
+        res.sendfile(filePath);
+      });
+      req.pipe(ws);
+    }
   },
 
   destroy: function(req, res){
@@ -153,7 +166,7 @@ module.exports = function(fixturesPath){
   mocks.route('/:collection/:id/:subcollection/:subid')
     .all(collectDir)
     .get(actions.show)
-    .put(actions.create)
+    .put(actions.update)
     .delete(actions.destroy);
 
   mocks.route('/:collection/:id/:subcollection')
@@ -165,7 +178,7 @@ module.exports = function(fixturesPath){
   mocks.route('/:collection/:id')
     .all(collectDir)
     .get(actions.show)
-    .put(actions.create)
+    .put(actions.update)
     .delete(actions.destroy);
 
   mocks.route('/:collection')

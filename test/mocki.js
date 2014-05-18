@@ -8,6 +8,7 @@ var app = require('../server');
 
 var mocksPath = path.join(__dirname, 'fixtures', 'mycollection'),
   fooPath = path.join(mocksPath, 'foo.json'),
+  fooHtmlPath = path.join(mocksPath, 'foo.html'),
   barPath = path.join(mocksPath, 'bar.json'),
   listPath = path.join(mocksPath, 'list.json'),
   subPath = path.join(mocksPath, 'foo', 'subcollection'),
@@ -28,12 +29,14 @@ describe('mocki', function(){
 
   beforeEach(function(){
     fs.writeFileSync(fooPath, JSON.stringify({"id":"foo"}))
+    fs.writeFileSync(fooHtmlPath, "<h1>hello</h1>")
     fs.writeFileSync(barPath, JSON.stringify({"id":"bar"}))
     fs.writeFileSync(subResourcePath, JSON.stringify({"id":"baz"}))
   });
 
   afterEach(function(){
     if(fs.existsSync(fooPath)) fs.unlinkSync(fooPath)
+    if(fs.existsSync(fooHtmlPath)) fs.unlinkSync(fooHtmlPath)
     if(fs.existsSync(barPath)) fs.unlinkSync(barPath)
     if(fs.existsSync(subResourcePath)) fs.unlinkSync(subResourcePath)
   });
@@ -106,6 +109,13 @@ describe('mocki', function(){
         .expect(404, done);
     });
 
+    it('should use content negotiation for html and text files', function(done){
+      request(app)
+        .get('/api/mycollection/foo')
+        .set('Accept', 'text/html')
+        .expect('<h1>hello</h1>', done);
+    });
+
   });
 
   describe('POST /:collection', function(){
@@ -137,6 +147,16 @@ describe('mocki', function(){
         .put('/api/mycollection/foo')
         .send({"id": "foo", "a": 1})
         .expect({"id": "foo", "a": 1})
+        .end(done);
+    });
+
+    it('should update text/html files if accept is "text/html"', function(done){
+      request(app)
+        .put('/api/mycollection/foo')
+        .set('Accept', 'text/html')
+        .set('Content-Type', 'text/html')
+        .send('<h1>replaced</h1>')
+        .expect('<h1>replaced</h1>')
         .end(done);
     });
   });
