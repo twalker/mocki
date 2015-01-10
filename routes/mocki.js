@@ -73,7 +73,7 @@ var actions = {
     }
 
     function dirNotFound(){
-      res.json(404, {error: collectionDir + ' not found.'});
+      res.status(404).json({error: collectionDir + ' not found.'});
     }
 
   },
@@ -87,7 +87,7 @@ var actions = {
           res.json(JSON.parse(data));
         });
       } else {
-        res.json(404, {error: filePath + ' not found.'});
+        res.status(404).json({error: filePath + ' not found.'});
       }
     });
   },
@@ -110,7 +110,7 @@ var actions = {
       if(err) throw err;
       fs.unlink(filePath, function(err){
         if(err) throw err;
-        res.send(204);
+        res.sendStatus(204);
       });
     });
   }
