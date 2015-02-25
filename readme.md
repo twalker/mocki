@@ -1,6 +1,6 @@
 ## 😌  mocki
 
-A little server of mock json files for backbone models & collections. 
+A little server of mock json files for backbone models & collections.
 It can be `use`ed  by an existing express app or run as a standalone server.
 
 It serves json files in `test/fixtures/:collection/` by default
@@ -8,13 +8,13 @@ It serves json files in `test/fixtures/:collection/` by default
 Maybe someday mocki will grow up to accept handy options like a routes hash that just provide actions...  
 or maybe remain a little script that's happy to stick with a simple convention.
 
-mocki has less that 1/1000th the coolness of [nock](https://github.com/flatiron/nock), but I wanted persistence and to learn stuff. 
+mocki has less that 1/1000th the coolness of [nock](https://github.com/flatiron/nock), but I wanted persistence and to learn stuff.
 
 ---------------
 
 ### usage
 
-create directories for collections to store json files. 
+create directories for collections to store json files.
 e.g. `test/fixtures/slayer-albums`
 
 place your fixture/mock files in the collection folders named by id.  
@@ -66,7 +66,7 @@ generates a unique id and saves to an `:id.json` file
 
 PUT /api/:collection/:id  
 updates an `:id.json` file
-  
+
 DELETE /api/:collection/:id  
 deletes `:id.json` file
 
@@ -81,7 +81,7 @@ All verbs are repeated for a nested resources
 
 ### TODO
 
-- double check error handling best practice
+- refactor into koa
 
 My cat sniffed this work, and typed:  
 00000000000000000000000000000
