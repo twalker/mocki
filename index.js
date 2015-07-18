@@ -1,1 +1,1 @@
-module.exports = require('./routes/mocki');
+module.exports = require('./routes/mocki')
